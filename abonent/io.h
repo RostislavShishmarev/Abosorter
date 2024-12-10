@@ -4,8 +4,8 @@
 #include "../const.h"
 #include "abonent.h"
 
-ErrorCode input_abofile(const char*, const char, Abonent**);
-ErrorCode output_abofile(const char*, const char, const Abonent*);
+ErrorCode input_abofile(const char*, const char, Aboarray*);
+ErrorCode output_abofile(const char*, const char, const Aboarray);
 
 #endif
 
