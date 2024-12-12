@@ -5,9 +5,16 @@
 #define BIN_MODE_STRING "bin"
 #define NOFILE_STRING "-"
 
-#define STD_MODE 's'
 #define TXT_MODE 't'
 #define BIN_MODE 'b'
+
+#define CHAR_END '\0'
+#define CHARS_SEP ";"
+
+#define STR_BUFSIZ 80
+#define ARR_BUFSIZ 5
+
+#define PHONE_LEN 16
 
 typedef enum {
 	ERR_OK = 0,

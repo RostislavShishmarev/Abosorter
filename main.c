@@ -53,6 +53,36 @@ int main(int argc, char **argv) {
 
 	printf("%s, %s\n", input_filename, output_filename);
 
+	Aboarray aboarray = {NULL, 0};
+
+	char i_mode;
+	if (input_mode == NULL) {
+		i_mode = TXT_MODE;
+	} else if (strcmp(BIN_MODE_STRING, input_mode) == 0) {
+		i_mode = BIN_MODE;
+	} else {
+		fprintf(stderr, "Unknown file mode: %s\n", input_mode);
+		return 1;
+	}
+
+	char o_mode;
+	if (output_mode == NULL) {
+		o_mode = TXT_MODE;
+	} else if (strcmp(BIN_MODE_STRING, output_mode) == 0) {
+		o_mode = BIN_MODE;
+	} else {
+		fprintf(stderr, "Unknown file mode: %s\n", output_mode);
+		return 1;
+	}
+
+	code = input_abofile(input_filename, i_mode, &aboarray);
+
+	if (code != ERR_OK) {
+		fprintf(stderr, "Error during input data\n");
+	}
+
+	print_aboarray(stdout, aboarray);
+
 	return 0;
 }
 

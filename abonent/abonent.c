@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "abonent.h"
+#include "../const.h"
 
 Abonent init_abonent(char* name, char phone[16], int call_time) {
 	Abonent abonent;
@@ -18,15 +19,26 @@ void del_abonent(Abonent abonent) {
 	free(abonent.name);
 }
 
-int check_phone(char phone[16]) {
+int check_phone(char* phone) {
+	int len = strlen(phone);
+
+	if (len > PHONE_LEN) {
+		return 0;
+	}
 	return 1;
 }
 
 void print_abonent(FILE* file, Abonent abonent) {
-	fprintf(file, "%ld;%s;%s;%d\n", strlen(abonent.name), abonent.name, abonent.phone, abonent.call_time);
+	fprintf(file, "%s;%s;%d\n", abonent.name, abonent.phone, abonent.call_time);
 }
 
 void print_aboarray(FILE* file, Aboarray aboarray) {
+	printf("Printing:\n");
+	if (aboarray.size == 0) {
+		fprintf(file, "No data\n");
+		return;
+	}
+	
 	for (int i = 0; i < aboarray.size; ++i) {
 		print_abonent(file, aboarray.array[i]);
 	}

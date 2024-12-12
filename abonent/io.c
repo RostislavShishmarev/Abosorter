@@ -6,16 +6,9 @@
 #include "../const.h"
 
 ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarray) {
-	int code = 0;
-	int len = 0;
-	int i = 2;
-
-	int name_len = 0;
-	char* name = NULL;
-	char phone[16] = {};
-	int call_time = 0;
-	
 	FILE* file = stdin;
+
+	int end_of_input = 0;
 
 	if (filename != NULL) {
 		file = fopen(filename, "w");
@@ -23,58 +16,147 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 			
 	switch (mode) {
 		case TXT_MODE:
-			code = fscanf(file, "%d\n", &len);
-			if (code != 1) {
-				return ERR_IO;
-			}
-
-			(*aboarray).size = len;
-
-			(*aboarray).array = realloc((*aboarray).array, sizeof(Abonent) * len);
+			Abonent abo_buffer[ARR_BUFSIZ] = {0};
+			
+			int n_buf_abonents = 0;
 
 			do {
-				i += 1;
+				// Get file string
 
-				if (i - 1 >= len) {
-					break;
-				}
+				char* string = NULL;
+				char str_buffer[81] = {0};
 
-				code = fscanf(file, "%d", &name_len);
+				int len = 0;
 
-				if (code == -1) {
-					break;
-				}
+				do {
+					int res = fscanf(file, "%80[^\n]", str_buffer);
 
-				if (name_len == 0) {
-					fprintf(stderr, "Error on reading string %d: name len must be > 0\n", i);
+					if (res <= 0) {
+						scanf("%*c");
+
+						if (res == -1) {
+							end_of_input = 1;
+						}
+						break;
+					}
+
+					int add_len = strlen(str_buffer);
+
+					string = realloc(string, (len + add_len + 1) * sizeof(char));
+
+					if (string == NULL) {
+						return ERR_MEM;
+					}
+
+					memcpy(string + len, str_buffer, add_len * sizeof(char));
+
+					len += add_len;
+
+				} while (1);
+
+				if (string == NULL) {
+					if (end_of_input == 1) {
+						break;
+					}
 					continue;
 				}
 
+				string[len] = CHAR_END;
 
-				name = malloc(sizeof(char) * (name_len + 1));
+				// Get name parameter
 
-				code = fscanf(file, ";%s;%16s;%d\n", name, phone, &call_time);
-
-				if (code == -1) {
-					break;
-				}
-
-				if (code != 3) {
-					fprintf(stderr, "Error on reading string %d\n", i);
+				char* name_word = strtok(string, CHARS_SEP);
+				
+				if (name_word == NULL) {
+					free(string);
 					continue;
 				}
 
-				Abonent abonent = init_abonent(name, phone, call_time);
+				int name_word_len = strlen(name_word);
 
-				(*aboarray).array[i - 2] = abonent;
+				char* name = malloc((name_word_len + 1) * sizeof(char));
+
+				if (name == NULL) {
+					free(string);
+					continue;
+				}
+
+				memcpy(name, name_word, name_word_len * sizeof(char));
+				name[name_word_len] = CHAR_END;
+
+				// Get phone parameter
+				
+				char* phone_word = strtok(NULL, CHARS_SEP);
+
+				if (phone_word == NULL) {
+					free(string);
+					continue;
+				}
+
+				int phone_word_len = strlen(phone_word);
+
+				char phone[PHONE_LEN + 1] = {0};
+
+				if (check_phone(phone_word) == 0) {
+					free(string);
+					continue;
+				}
+
+				memcpy(phone, phone_word, phone_word_len * sizeof(char));
+				phone[phone_word_len] = CHAR_END;
+
+				// Get call time parameter
+				
+				char* call_time_word = strtok(NULL, CHARS_SEP);
+
+				if (call_time_word == NULL) {
+					free(string);
+					continue;
+				}
+
+				int call_time = atoi(call_time_word);
+
+				if (call_time == 0) {
+					free(string);
+					continue;
+				}
+
+				// Init abonent
+
+				abo_buffer[n_buf_abonents] = init_abonent(name, phone, call_time);
+				n_buf_abonents += 1;
+
+				if (n_buf_abonents >= ARR_BUFSIZ) {
+					n_buf_abonents = 0;
+
+					(*aboarray).array = realloc((*aboarray).array, ((*aboarray).size + ARR_BUFSIZ) * sizeof(Abonent));
+					if ((*aboarray).array == NULL) {
+						return ERR_MEM;
+					}
+					memcpy((*aboarray).array + (*aboarray).size, abo_buffer, ARR_BUFSIZ * sizeof(Abonent));
+					(*aboarray).size += ARR_BUFSIZ;
+				}
+
 			} while (1);
 
+			if (n_buf_abonents == 0) {
+				break;
+			}
+
+			(*aboarray).array = realloc((*aboarray).array, ((*aboarray).size + n_buf_abonents) * sizeof(Abonent));
+			if ((*aboarray).array == NULL) {
+				return ERR_MEM;
+			}
+			memcpy((*aboarray).array + (*aboarray).size, abo_buffer, n_buf_abonents * sizeof(Abonent));
+			(*aboarray).size += n_buf_abonents;
 			break;
 		case BIN_MODE:
 			break;
 		default:
 			return ERR_ARGS;
 	}
+
+	fclose(file);
 
 	return ERR_OK;
 }

@@ -12,7 +12,6 @@ typedef struct {
 typedef struct {
 	Abonent* array;
 	int size;
-	int capacity;
 } Aboarray;
 
 Abonent init_abonent(char*, char[16], int);
