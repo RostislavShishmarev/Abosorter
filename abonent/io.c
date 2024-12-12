@@ -12,6 +12,11 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 
 	if (filename != NULL) {
 		file = fopen(filename, "r");
+		if (file = NULL) {
+			fprintf(stderr, "Can`t open file %s\n", filename);
+			return ERR_IO;
+		}
+		printf("Successfully open\n");
 	}
 			
 	switch (mode) {
@@ -64,9 +69,14 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 					break;
 				}
 
-				string[len] = CHAR_END;
-
 				n_strings += 1;
+	
+				if (string == NULL) {
+					fprintf(stderr, "Can`t read string %d\n", n_strings);
+					continue;
+				}
+
+				string[len] = CHAR_END;
 
 				// Get name parameter
 
@@ -157,7 +167,9 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 
 			} while (1);
 
-			free(string);
+			if (string != NULL) {
+				free(string);
+			}
 
 			if (n_buf_abonents == 0) {
 				break;
@@ -194,9 +206,11 @@ ErrorCode output_abofile(const char* filename, const char mode, const Aboarray a
 			
 	switch (mode) {
 		case TXT_MODE:
+			print_aboarray(file, aboarray);
 			break;
 		case BIN_MODE:
 			break;
 	}
+	return ERR_OK;
 }
 

@@ -19,6 +19,7 @@ void clear_abonent(Abonent);
 int check_phone(char[16]);
 void print_abonent(FILE*, Abonent);
 void print_aboarray(FILE*, Aboarray);
+void free_aboarray(Aboarray);
 
 #endif
 

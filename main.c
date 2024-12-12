@@ -50,10 +50,7 @@ int main(int argc, char **argv) {
 	}	
 
 	printf("%s, %s\n", input_mode, output_mode);
-
 	printf("%s, %s\n", input_filename, output_filename);
-
-	Aboarray aboarray = {NULL, 0};
 
 	char i_mode;
 	if (input_mode == NULL) {
@@ -75,13 +72,30 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 
+	// Input
+
+	Aboarray aboarray = {NULL, 0};
+
 	code = input_abofile(input_filename, i_mode, &aboarray);
 
 	if (code != ERR_OK) {
 		fprintf(stderr, "Error during input data\n");
 	}
 
-	print_aboarray(stdout, aboarray);
+	// Sort
+	
+
+	// Output
+
+	code = output_abofile(output_filename, o_mode, aboarray);
+
+	if (code != ERR_OK) {
+		fprintf(stderr, "Error during output data\n");
+	}
+	
+	// Free
+	
+	free_aboarray(aboarray);
 
 	return 0;
 }

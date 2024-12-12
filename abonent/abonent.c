@@ -33,7 +33,6 @@ void print_abonent(FILE* file, Abonent abonent) {
 }
 
 void print_aboarray(FILE* file, Aboarray aboarray) {
-	printf("Printing:\n");
 	if (aboarray.size == 0) {
 		fprintf(file, "No data\n");
 		return;
@@ -42,5 +41,17 @@ void print_aboarray(FILE* file, Aboarray aboarray) {
 	for (int i = 0; i < aboarray.size; ++i) {
 		print_abonent(file, aboarray.array[i]);
 	}
+}
+
+void free_aboarray(Aboarray aboarray) {
+	if (aboarray.size == 0) {
+		return;
+	}
+	
+	for (int i = 0; i < aboarray.size; ++i) {
+		del_abonent(aboarray.array[i]);
+	}
+
+	free(aboarray.array);
 }
 
