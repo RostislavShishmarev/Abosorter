@@ -16,6 +16,9 @@
 
 #define PHONE_LEN 16
 
+#define ERRMEM_MSG "Memory error, abort program"
+
+
 typedef enum {
 	ERR_OK = 0,
 	ERR_MEM = 1,

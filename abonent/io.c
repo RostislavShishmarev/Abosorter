@@ -11,7 +11,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 	int end_of_input = 0;
 
 	if (filename != NULL) {
-		file = fopen(filename, "w");
+		file = fopen(filename, "r");
 	}
 			
 	switch (mode) {
@@ -20,10 +20,15 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 			
 			int n_buf_abonents = 0;
 
+			char* string = NULL;
+			char* name = NULL;
+
+			int n_strings = 0;
+
 			do {
 				// Get file string
 
-				char* string = NULL;
+				string = NULL;
 				char str_buffer[81] = {0};
 
 				int len = 0;
@@ -45,6 +50,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 					string = realloc(string, (len + add_len + 1) * sizeof(char));
 
 					if (string == NULL) {
+						fprintf(stderr, ERRMEM_MSG);
 						return ERR_MEM;
 					}
 
@@ -54,29 +60,30 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 
 				} while (1);
 
-				if (string == NULL) {
-					if (end_of_input == 1) {
-						break;
-					}
-					continue;
+				if (end_of_input == 1) {
+					break;
 				}
 
 				string[len] = CHAR_END;
+
+				n_strings += 1;
 
 				// Get name parameter
 
 				char* name_word = strtok(string, CHARS_SEP);
 				
 				if (name_word == NULL) {
+					fprintf(stderr, "Can`t find name field on string %d\n", n_strings);
 					free(string);
 					continue;
 				}
 
 				int name_word_len = strlen(name_word);
 
-				char* name = malloc((name_word_len + 1) * sizeof(char));
+				name = malloc((name_word_len + 1) * sizeof(char));
 
 				if (name == NULL) {
+					fprintf(stderr, "%s. Place: field name for string %d\n", ERRMEM_MSG, n_strings);
 					free(string);
 					continue;
 				}
@@ -89,7 +96,9 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 				char* phone_word = strtok(NULL, CHARS_SEP);
 
 				if (phone_word == NULL) {
+					fprintf(stderr, "Can`t find phone field on string %d\n", n_strings);
 					free(string);
+					free(name);
 					continue;
 				}
 
@@ -98,7 +107,9 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 				char phone[PHONE_LEN + 1] = {0};
 
 				if (check_phone(phone_word) == 0) {
+					fprintf(stderr, "Wrong format of phone field on string %d\n", n_strings);
 					free(string);
+					free(name);
 					continue;
 				}
 
@@ -110,14 +121,18 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 				char* call_time_word = strtok(NULL, CHARS_SEP);
 
 				if (call_time_word == NULL) {
+					fprintf(stderr, "Can`t find call time field on string %d\n", n_strings);
 					free(string);
+					free(name);
 					continue;
 				}
 
 				int call_time = atoi(call_time_word);
 
 				if (call_time == 0) {
+					fprintf(stderr, "Wrong format of call time field on string %d\n", n_strings);
 					free(string);
+					free(name);
 					continue;
 				}
 
@@ -131,6 +146,9 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 
 					(*aboarray).array = realloc((*aboarray).array, ((*aboarray).size + ARR_BUFSIZ) * sizeof(Abonent));
 					if ((*aboarray).array == NULL) {
+						fprintf(stderr, ERRMEM_MSG);
+						free(string);
+						free(name);
 						return ERR_MEM;
 					}
 					memcpy((*aboarray).array + (*aboarray).size, abo_buffer, ARR_BUFSIZ * sizeof(Abonent));
@@ -139,12 +157,16 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 
 			} while (1);
 
+			free(string);
+
 			if (n_buf_abonents == 0) {
 				break;
 			}
 
 			(*aboarray).array = realloc((*aboarray).array, ((*aboarray).size + n_buf_abonents) * sizeof(Abonent));
 			if ((*aboarray).array == NULL) {
+				fprintf(stderr, ERRMEM_MSG);
+				free(name);
 				return ERR_MEM;
 			}
 			memcpy((*aboarray).array + (*aboarray).size, abo_buffer, n_buf_abonents * sizeof(Abonent));
@@ -162,5 +184,19 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 }
 
 ErrorCode output_abofile(const char* filename, const char mode, const Aboarray aboarray) {
+	FILE* file = stdout;
+
+	int end_of_input = 0;
+
+	if (filename != NULL) {
+		file = fopen(filename, "w");
+	}
+			
+	switch (mode) {
+		case TXT_MODE:
+			break;
+		case BIN_MODE:
+			break;
+	}
 }
 
