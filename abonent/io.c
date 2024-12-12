@@ -7,44 +7,44 @@
 
 ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarray) {
 	FILE* file = stdin;
-
-	int end_of_input = 0;
-
-	if (filename != NULL) {
-		printf("%s\n", filename);
-		file = fopen(filename, "r");
-		if (file = NULL) {
-			perror("Can`t open file\n");
-			return ERR_IO;
-		}
-		printf("Successfully open\n");
-	}
-			
+	
 	switch (mode) {
 		case TXT_MODE:
+			// Open file
+	
+			if (filename != NULL) {
+				file = fopen(filename, "r");
+				if (file == NULL) {
+					fprintf(stderr, "Can`t open file %s\n", filename);
+					return ERR_IO;
+				}
+			}
+
+			// Init variables
+
 			Abonent abo_buffer[ARR_BUFSIZ] = {0};
 			
 			int n_buf_abonents = 0;
+			int n_strings = 0;
+			int end_of_input = 0;
 			
 			char str_buffer[81] = {0};
-			int len = 0;
 
 			char* string = NULL;
 			char* name = NULL;
-
-			int n_strings = 0;
 
 			do {
 				// Get file string
 
 				string = NULL;
-				len = 0;
+
+				int len = 0;
 
 				do {
 					int res = fscanf(file, "%80[^\n]", str_buffer);
 
 					if (res <= 0) {
-						scanf("%*c");
+						fscanf(file, "%*c");
 
 						if (res == -1) {
 							end_of_input = 1;
@@ -58,6 +58,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 
 					if (string == NULL) {
 						fprintf(stderr, ERRMEM_MSG);
+						fclose(file);
 						return ERR_MEM;
 					}
 
@@ -161,6 +162,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 						fprintf(stderr, ERRMEM_MSG);
 						free(string);
 						free(name);
+						fclose(file);
 						return ERR_MEM;
 					}
 					memcpy((*aboarray).array + (*aboarray).size, abo_buffer, ARR_BUFSIZ * sizeof(Abonent));
@@ -181,6 +183,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 			if ((*aboarray).array == NULL) {
 				fprintf(stderr, ERRMEM_MSG);
 				free(name);
+				fclose(file);
 				return ERR_MEM;
 			}
 			memcpy((*aboarray).array + (*aboarray).size, abo_buffer, n_buf_abonents * sizeof(Abonent));
