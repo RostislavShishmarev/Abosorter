@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "abonent.h"
-#include "../const.h"
+#include "../const/const.h"
 
 Abonent init_abonent(char* name, char phone[16], int call_time) {
 	Abonent abonent;

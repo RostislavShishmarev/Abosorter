@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "abonent.h"
-#include "../const.h"
+#include "../const/const.h"
 
 ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarray) {
 	FILE* file = stdin;
@@ -35,8 +35,10 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 
 			do {
 				// Get file string
-
-				string = NULL;
+				
+				if (string != NULL) {
+					total_free(&string);
+				}
 
 				int len = 0;
 
@@ -87,7 +89,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 				
 				if (name_word == NULL) {
 					fprintf(stderr, "Can`t find name field on string %d\n", n_strings);
-					free(string);
+					total_free(&string);
 					continue;
 				}
 
@@ -97,7 +99,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 
 				if (name == NULL) {
 					fprintf(stderr, "%s. Place: field name for string %d\n", ERRMEM_MSG, n_strings);
-					free(string);
+					total_free(&string);
 					continue;
 				}
 
@@ -110,8 +112,8 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 
 				if (phone_word == NULL) {
 					fprintf(stderr, "Can`t find phone field on string %d\n", n_strings);
-					free(string);
-					free(name);
+					total_free(&string);
+					total_free(&name);
 					continue;
 				}
 
@@ -121,8 +123,8 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 
 				if (check_phone(phone_word) == 0) {
 					fprintf(stderr, "Wrong format of phone field on string %d\n", n_strings);
-					free(string);
-					free(name);
+					total_free(&string);
+					total_free(&name);
 					continue;
 				}
 
@@ -135,8 +137,8 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 
 				if (call_time_word == NULL) {
 					fprintf(stderr, "Can`t find call time field on string %d\n", n_strings);
-					free(string);
-					free(name);
+					total_free(&string);
+					total_free(&name);
 					continue;
 				}
 
@@ -144,8 +146,8 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 
 				if (call_time == 0) {
 					fprintf(stderr, "Wrong format of call time field on string %d\n", n_strings);
-					free(string);
-					free(name);
+					total_free(&string);
+					total_free(&name);
 					continue;
 				}
 
@@ -160,8 +162,8 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 					(*aboarray).array = realloc((*aboarray).array, ((*aboarray).size + ARR_BUFSIZ) * sizeof(Abonent));
 					if ((*aboarray).array == NULL) {
 						fprintf(stderr, ERRMEM_MSG);
-						free(string);
-						free(name);
+						total_free(&string);
+						total_free(&name);
 						fclose(file);
 						return ERR_MEM;
 					}
@@ -172,7 +174,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 			} while (1);
 
 			if (string != NULL) {
-				free(string);
+				total_free(&string);
 			}
 
 			if (n_buf_abonents == 0) {
@@ -182,7 +184,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 			(*aboarray).array = realloc((*aboarray).array, ((*aboarray).size + n_buf_abonents) * sizeof(Abonent));
 			if ((*aboarray).array == NULL) {
 				fprintf(stderr, ERRMEM_MSG);
-				free(name);
+				total_free(&name);
 				fclose(file);
 				return ERR_MEM;
 			}

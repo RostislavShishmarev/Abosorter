@@ -1,7 +1,7 @@
 #ifndef IO_H
 #define IO_H
 
-#include "../const.h"
+#include "../const/const.h"
 #include "abonent.h"
 
 ErrorCode input_abofile(const char*, const char, Aboarray*);

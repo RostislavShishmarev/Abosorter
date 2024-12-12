@@ -7,7 +7,7 @@
 #include "abonent/abonent.h"
 #include "abonent/io.h"
 #include "sorts/sorts.h"
-#include "const.h"
+#include "const/const.h"
 
 int main(int argc, char **argv) {
 	ErrorCode code = ERR_OK;
@@ -49,8 +49,8 @@ int main(int argc, char **argv) {
 		
 	}	
 
-	printf("%s, %s\n", input_mode, output_mode);
-	printf("%s, %s\n", input_filename, output_filename);
+	// printf("%s, %s\n", input_mode, output_mode);
+	// printf("%s, %s\n", input_filename, output_filename);
 
 	char i_mode;
 	if (input_mode == NULL) {
