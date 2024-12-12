@@ -11,9 +11,10 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 	int end_of_input = 0;
 
 	if (filename != NULL) {
+		printf("%s\n", filename);
 		file = fopen(filename, "r");
 		if (file = NULL) {
-			fprintf(stderr, "Can`t open file %s\n", filename);
+			perror("Can`t open file\n");
 			return ERR_IO;
 		}
 		printf("Successfully open\n");
@@ -24,6 +25,9 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 			Abonent abo_buffer[ARR_BUFSIZ] = {0};
 			
 			int n_buf_abonents = 0;
+			
+			char str_buffer[81] = {0};
+			int len = 0;
 
 			char* string = NULL;
 			char* name = NULL;
@@ -34,9 +38,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 				// Get file string
 
 				string = NULL;
-				char str_buffer[81] = {0};
-
-				int len = 0;
+				len = 0;
 
 				do {
 					int res = fscanf(file, "%80[^\n]", str_buffer);
