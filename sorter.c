@@ -7,6 +7,7 @@
 #include <unistd.h>
 
 #include "abonent/abonent.h"
+#include "abonent/compares.h"
 #include "abonent/io.h"
 #include "sorts/sorts.h"
 #include "const/const.h"
@@ -183,6 +184,4 @@ int main(int argc, char **argv) {
 
 	return 0;
 }
-
-void (*sort_func)(void*, size_t, size_t, int (*)(const void *, const void *, void *), void*);
 
