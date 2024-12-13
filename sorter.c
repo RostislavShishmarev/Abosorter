@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,6 +12,8 @@
 #include "const/const.h"
 
 int main(int argc, char **argv) {
+	// Init variables
+	
 	ErrorCode code = ERR_OK;
 	int command = 0;
 
@@ -19,6 +23,17 @@ int main(int argc, char **argv) {
 	char *output_mode = NULL;
 	char *output_filename = NULL;
 
+	int reverse_sort = 0;
+	int do_sort = 1;
+
+	char *field = CALL_TIME_FIELD;
+	char *sort_type = QUICK_TYPE;
+
+	int (*compare_func)(const void *, const void *, void *);
+	void (*sort_func)(void*, size_t, size_t, int (*)(const void *, const void *, void *), void*);
+	
+	// Get opts
+
 	while ((command = getopt(argc, argv, OPTS)) != -1) {
 		switch (command) {
 			case 'i':
@@ -26,6 +41,18 @@ int main(int argc, char **argv) {
 				break;
 			case 'o':
 				output_mode = optarg;
+				break;
+			case 'r':
+				reverse_sort = 1;
+				break;
+			case 'n':
+				do_sort = 0;
+				break;
+			case 't':
+				sort_type = optarg;
+				break;
+			case 'f':
+				field = optarg;
 				break;
 			case '?':
 				/* if (index(OPTS, optopt) != NULL) {
@@ -40,6 +67,8 @@ int main(int argc, char **argv) {
 				abort();
 		}
 	}
+	
+	// Parse opts
 
 	if (argc >= optind + 1 && strcmp(argv[optind], NOFILE_STRING) != 0) {
 		input_filename = argv[optind];
@@ -81,6 +110,37 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 
+	if (strcmp(NAME_FIELD, field) == 0) {
+		compare_func = compare_name;
+	} else if (strcmp(PHONE_FIELD, field) == 0) {
+		compare_func = compare_phone;
+	} else if (strcmp(CALL_TIME_FIELD, field) == 0) {
+		compare_func = compare_call_time;
+	} else {
+		fprintf(stderr, "Unknown sort field: %s\n", sort_type);
+		return 1;
+	}
+
+	char sort_mode;
+	if (reverse_sort == 1) {
+		sort_mode = REVERSE_MODE;
+	} else {
+		sort_mode = NORMAL_MODE;
+	}
+
+	// Messages
+
+	if (strcmp(QUICK_TYPE, sort_type) == 0) {
+		sort_func = qsort_r;
+	} else if (strcmp(GNOME_TYPE, sort_type) == 0) {
+		sort_func = gnome_sort;
+	} else if (strcmp(DSELECT_TYPE, sort_type) == 0) {
+		sort_func = dselect_sort;
+	} else {
+		fprintf(stderr, "Unknown sort type: %s\n", sort_type);
+		return 1;
+	}
+
 	// Messages
 
 	printf("Input mode: %s\nOutput mode: %s\n", input_mode, output_mode);
@@ -104,6 +164,8 @@ int main(int argc, char **argv) {
 
 	// Sort
 	
+	if (do_sort) {
+	}
 
 	// Output
 
@@ -121,4 +183,6 @@ int main(int argc, char **argv) {
 
 	return 0;
 }
+
+void (*sort_func)(void*, size_t, size_t, int (*)(const void *, const void *, void *), void*);
 

@@ -1,7 +1,7 @@
 #ifndef CONST_H
 #define CONST_H
 
-#define OPTS "i:o:"
+#define OPTS "i:o:rnt:f:"
 #define BIN_MODE_STRING "bin"
 #define TXT_MODE_STRING "txt"
 #define NOFILE_STRING "-"
@@ -20,6 +20,17 @@
 #define ERRMEM_MSG "Memory error, abort program"
 
 #define DIGITS "0123456789"
+
+#define NAME_FIELD "name"
+#define PHONE_FIELD "phone"
+#define CALL_TIME_FIELD "time"
+
+#define GNOME_TYPE "gnome"
+#define DSELECT_TYPE "dselect"
+#define QUICK_TYPE "quick"
+
+#define REVERSE_MODE 'r'
+#define NORMAL_MODE 'n'
 
 typedef enum {
 	ERR_OK = 0,
