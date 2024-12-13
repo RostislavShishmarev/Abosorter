@@ -19,6 +19,8 @@
 
 #define ERRMEM_MSG "Memory error, abort program"
 
+#define DIGITS "0123456789"
+
 typedef enum {
 	ERR_OK = 0,
 	ERR_MEM = 1,

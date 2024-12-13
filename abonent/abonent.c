@@ -21,11 +21,21 @@ void del_abonent(Abonent abonent) {
 }
 
 int check_phone(char* phone) {
-	int len = strlen(phone);
+	size_t len = (size_t)strlen(phone);
 
 	if (len > PHONE_LEN) {
 		return 0;
 	}
+
+	if (phone[0] == '+') {
+		phone += 1;
+		len -= 1;
+	}
+
+	if (strspn(phone, DIGITS) != len) {
+		return 0;
+	}
+
 	return 1;
 }
 
