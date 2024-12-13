@@ -3,6 +3,7 @@
 
 #define OPTS "i:o:"
 #define BIN_MODE_STRING "bin"
+#define TXT_MODE_STRING "txt"
 #define NOFILE_STRING "-"
 
 #define TXT_MODE 't'

@@ -5,7 +5,7 @@
 #include "abonent.h"
 #include "../const/const.h"
 
-Abonent init_abonent(char* name, char phone[16], int call_time) {
+Abonent init_abonent(char* name, char phone[16], time_t call_time) {
 	Abonent abonent;
 
 	abonent.name = name;
@@ -29,7 +29,7 @@ int check_phone(char* phone) {
 }
 
 void print_abonent(FILE* file, Abonent abonent) {
-	fprintf(file, "%s;%s;%d\n", abonent.name, abonent.phone, abonent.call_time);
+	fprintf(file, "%s;%s;%ld\n", abonent.name, abonent.phone, abonent.call_time);
 }
 
 void print_aboarray(FILE* file, Aboarray aboarray) {

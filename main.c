@@ -49,12 +49,10 @@ int main(int argc, char **argv) {
 		
 	}	
 
-	// printf("%s, %s\n", input_mode, output_mode);
-	// printf("%s, %s\n", input_filename, output_filename);
-
 	char i_mode;
 	if (input_mode == NULL) {
 		i_mode = TXT_MODE;
+		input_mode = TXT_MODE_STRING;
 	} else if (strcmp(BIN_MODE_STRING, input_mode) == 0) {
 		i_mode = BIN_MODE;
 	} else {
@@ -65,12 +63,22 @@ int main(int argc, char **argv) {
 	char o_mode;
 	if (output_mode == NULL) {
 		o_mode = TXT_MODE;
+		output_mode = TXT_MODE_STRING;
 	} else if (strcmp(BIN_MODE_STRING, output_mode) == 0) {
 		o_mode = BIN_MODE;
 	} else {
 		fprintf(stderr, "Unknown file mode: %s\n", output_mode);
 		return 1;
 	}
+
+	// Messages
+
+	printf("Input mode: %s\nOutput mode: %s\n", input_mode, output_mode);
+
+	char* input_s = input_filename == NULL ? "console" : input_filename;
+	char* output_s = output_filename == NULL ? "console" : output_filename;
+
+	printf("Input file: %s\nOutput file: %s\n\n", input_s, output_s);
 
 	// Input
 
@@ -80,6 +88,8 @@ int main(int argc, char **argv) {
 
 	if (code != ERR_OK) {
 		fprintf(stderr, "Error during input data\n");
+		free_aboarray(aboarray);
+		return 1;
 	}
 
 	// Sort
@@ -91,6 +101,8 @@ int main(int argc, char **argv) {
 
 	if (code != ERR_OK) {
 		fprintf(stderr, "Error during output data\n");
+		free_aboarray(aboarray);
+		return 1;
 	}
 	
 	// Free
