@@ -144,12 +144,16 @@ int main(int argc, char **argv) {
 
 	// Messages
 
-	printf("Input mode: %s\nOutput mode: %s\n", input_mode, output_mode);
+	printf("Input mode: %s\nOutput mode: %s\n\n", input_mode, output_mode);
 
 	char* input_s = input_filename == NULL ? "console" : input_filename;
 	char* output_s = output_filename == NULL ? "console" : output_filename;
 
 	printf("Input file: %s\nOutput file: %s\n\n", input_s, output_s);
+	printf("Sort algorythm: %s\nSort field: %s\n\n", sort_type, field);
+	if (reverse_sort == 1) {
+		printf("Reversed sort\n\n");
+	}
 
 	// Input
 
@@ -166,6 +170,7 @@ int main(int argc, char **argv) {
 	// Sort
 	
 	if (do_sort) {
+		sort_func(aboarray.array, aboarray.size, sizeof(Abonent), compare_func, &sort_mode);
 	}
 
 	// Output
@@ -177,7 +182,7 @@ int main(int argc, char **argv) {
 		free_aboarray(aboarray);
 		return 1;
 	}
-	
+
 	// Free
 	
 	free_aboarray(aboarray);

@@ -18,6 +18,8 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 					fprintf(stderr, "Can`t open file %s\n", filename);
 					return ERR_IO;
 				}
+			} else {
+				fprintf(stdout, "\nType data:\n\n");
 			}
 
 			// Init variables
@@ -346,6 +348,8 @@ ErrorCode output_abofile(const char* filename, const char mode, const Aboarray a
 					fprintf(stderr, "Can`t open file %s\n", filename);
 					return ERR_IO;
 				}
+			} else {
+				fprintf(file, "\nResult data:\n\n");
 			}
 
 			print_aboarray(file, aboarray);

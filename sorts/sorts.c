@@ -23,7 +23,11 @@ void gnome_sort(void *base, size_t nmemb, size_t size, int (*compar)(const void 
 
 		if (res > 0) {
 			swap(first, second, buf, size);
-			i -= 1;
+			if (i != 0) {
+				i -= 1;
+			} else {
+				i += 1;
+			}
 		} else {
 			i += 1;
 		}
@@ -31,7 +35,6 @@ void gnome_sort(void *base, size_t nmemb, size_t size, int (*compar)(const void 
 
 	free(buf);
 }
-
 
 void dselect_sort(void *base, size_t nmemb, size_t size, int (*compar)(const void *, const void *, void *), void *arg) {
 	size_t first_i = 0;
@@ -57,16 +60,19 @@ void dselect_sort(void *base, size_t nmemb, size_t size, int (*compar)(const voi
 		for (j = first_i; j <= last_i; ++j) {
 			void *j_el = base + (j * size);
 			res = compar(j_el, min_el, arg);
-			if (res < 0) {
+			if (res <= 0) {
 				min_i = j;
 				min_el = j_el;
 			}
 
 			res = compar(max_el, j_el, arg);
-			if (res < 0) {
+			if (res <= 0) {
 				max_i = j;
 				max_el = j_el;
 			}
+		}
+		if (first_el == max_el) {
+			max_el = min_el;
 		}
 		swap(first_el, min_el, buf, size);
 		swap(last_el, max_el, buf, size);

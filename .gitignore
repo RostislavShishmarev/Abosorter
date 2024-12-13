@@ -1,6 +1,9 @@
 # Data directories
 abo/
 
+# Redacted files
+*.swp
+
 # Prerequisites
 *.d
 
