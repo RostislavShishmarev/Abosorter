@@ -3,20 +3,22 @@
 
 #include <stdio.h>
 
+#include "../const/const.h"
+
 typedef struct {
 	char* name;
-	char phone[16];
+	char phone[PHONE_LEN + 1];
 	time_t call_time;
 } Abonent;
 
 typedef struct {
 	Abonent* array;
-	int size;
+	size_t size;
 } Aboarray;
 
-Abonent init_abonent(char*, char[16], time_t);
+Abonent init_abonent(char*, char[PHONE_LEN + 1], time_t);
 void clear_abonent(Abonent);
-int check_phone(char[16]);
+int check_phone(char*);
 void print_abonent(FILE*, Abonent);
 void print_aboarray(FILE*, Aboarray);
 void free_aboarray(Aboarray);

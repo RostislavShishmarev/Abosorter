@@ -25,7 +25,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 			Abonent abo_buffer[ARR_BUFSIZ] = {0};
 			
 			int n_buf_abonents = 0;
-			int n_strings = 0;
+			size_t n_strings = 0;
 			int end_of_input = 0;
 			
 			char str_buffer[81] = {0};
@@ -77,7 +77,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 				n_strings += 1;
 	
 				if (string == NULL) {
-					fprintf(stderr, "Can`t read string %d\n", n_strings);
+					fprintf(stderr, "Can`t read string %ld\n", n_strings);
 					continue;
 				}
 
@@ -88,7 +88,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 				char* name_word = strtok(string, CHARS_SEP);
 				
 				if (name_word == NULL) {
-					fprintf(stderr, "Can`t find name field on string %d\n", n_strings);
+					fprintf(stderr, "Can`t find name field on string %ld\n", n_strings);
 					total_free(&string);
 					continue;
 				}
@@ -98,7 +98,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 				name = malloc((name_word_len + 1) * sizeof(char));
 
 				if (name == NULL) {
-					fprintf(stderr, "%s. Place: field name for string %d\n", ERRMEM_MSG, n_strings);
+					fprintf(stderr, "%s. Place: field name for string %ld\n", ERRMEM_MSG, n_strings);
 					total_free(&string);
 					continue;
 				}
@@ -111,7 +111,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 				char* phone_word = strtok(NULL, CHARS_SEP);
 
 				if (phone_word == NULL) {
-					fprintf(stderr, "Can`t find phone field on string %d\n", n_strings);
+					fprintf(stderr, "Can`t find phone field on string %ld\n", n_strings);
 					total_free(&string);
 					total_free(&name);
 					continue;
@@ -122,7 +122,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 				char phone[PHONE_LEN + 1] = {0};
 
 				if (check_phone(phone_word) == 0) {
-					fprintf(stderr, "Wrong format of phone field on string %d\n", n_strings);
+					fprintf(stderr, "Wrong format of phone field on string %ld\n", n_strings);
 					total_free(&string);
 					total_free(&name);
 					continue;
@@ -136,7 +136,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 				char* call_time_word = strtok(NULL, CHARS_SEP);
 
 				if (call_time_word == NULL) {
-					fprintf(stderr, "Can`t find call time field on string %d\n", n_strings);
+					fprintf(stderr, "Can`t find call time field on string %ld\n", n_strings);
 					total_free(&string);
 					total_free(&name);
 					continue;
@@ -145,7 +145,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 				time_t call_time = (time_t)atoi(call_time_word);
 
 				if (call_time == 0) {
-					fprintf(stderr, "Wrong format of call time field on string %d\n", n_strings);
+					fprintf(stderr, "Wrong format of call time field on string %ld\n", n_strings);
 					total_free(&string);
 					total_free(&name);
 					continue;
@@ -205,11 +205,11 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 			// Init variables
 
 			size_t res = 0;
-			int aboarray_len = 0;
+			size_t aboarray_len = 0;
 
 			// Init aboarray
 			
-			res = fread(&aboarray_len, sizeof(int), 1, file);
+			res = fread(&aboarray_len, sizeof(size_t), 1, file);
 
 			if (res != 1) {
 				fprintf(stderr, "Can`t read number of aboarray elements\n");
@@ -225,26 +225,26 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 				return ERR_MEM;
 			}
 
-			for (int i = 0; i < aboarray_len; ++i) {
+			for (size_t i = 0; i < aboarray_len; ++i) {
 				// Get name parameter
 
-				int name_len = 0;
+				size_t name_len = 0;
 
-				res = fread(&name_len, sizeof(int), 1, file);
+				res = fread(&name_len, sizeof(size_t), 1, file);
 
 				if (res != 1) {
-					fprintf(stderr, "Can`t read name len of abonent %d\n", i + 1);
+					fprintf(stderr, "Can`t read name len of abonent %ld\n", i + 1);
 					fclose(file);
 					return ERR_IO;
 				}
 
 				if (name_len == 0) {
-					fprintf(stderr, "Incorrect name len of abonent %d\n", i + 1);
+					fprintf(stderr, "Incorrect name len of abonent %ld\n", i + 1);
 					fclose(file);
 					return ERR_IO;
 				}
 
-				char* name = malloc(sizeof(char) * name_len);
+				char* name = malloc(sizeof(char) * (name_len + 1));
 
 				if (name == NULL) {
 					fprintf(stderr, ERRMEM_MSG);
@@ -255,7 +255,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 				res = fread(name, sizeof(char), name_len, file);
 
 				if (res != name_len) {
-					fprintf(stderr, "Can`t read name len of abonent %d\n", i + 1);
+					fprintf(stderr, "Can`t read name len of abonent %ld\n", i + 1);
 					fclose(file);
 					total_free(&name);
 					return ERR_IO;
@@ -265,19 +265,19 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 
 				// Get phone parameter
 
-				int phone_len = 0;
+				size_t phone_len = 0;
 
-				res = fread(&phone_len, sizeof(int), 1, file);
+				res = fread(&phone_len, sizeof(size_t), 1, file);
 
 				if (res != 1) {
-					fprintf(stderr, "Can`t read phone len of abonent %d\n", i + 1);
+					fprintf(stderr, "Can`t read phone len of abonent %ld\n", i + 1);
 					fclose(file);
 					total_free(&name);
 					return ERR_IO;
 				}
 
 				if (phone_len > PHONE_LEN || phone_len == 0) {
-					fprintf(stderr, "Incorrect phone len of abonent %d\n", i + 1);
+					fprintf(stderr, "Incorrect phone len of abonent %ld\n", i + 1);
 					fclose(file);
 					total_free(&name);
 					return ERR_IO;
@@ -288,7 +288,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 				res = fread(phone, sizeof(char), phone_len, file);
 				
 				if (res != phone_len) {
-					fprintf(stderr, "Can`t read phone of abonent %d\n", i + 1);
+					fprintf(stderr, "Can`t read phone of abonent %ld\n", i + 1);
 					fclose(file);
 					total_free(&name);
 					return ERR_IO;
@@ -297,7 +297,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 				phone[phone_len] = CHAR_END;
 
 				if (check_phone(phone) != 1) {
-					fprintf(stderr, "Incorrect phone of abonent %d\n", i + 1);
+					fprintf(stderr, "Incorrect phone of abonent %ld\n", i + 1);
 					fclose(file);
 					total_free(&name);
 					return ERR_IO;
@@ -310,7 +310,7 @@ ErrorCode input_abofile(const char* filename, const char mode, Aboarray* aboarra
 				res = fread(&call_time, sizeof(time_t), 1, file);
 
 				if (res != 1) {
-					fprintf(stderr, "Can`t read call time of abonent %d\n", i + 1);
+					fprintf(stderr, "Can`t read call time of abonent %ld\n", i + 1);
 					fclose(file);
 					total_free(&name);
 					return ERR_IO;
@@ -362,7 +362,7 @@ ErrorCode output_abofile(const char* filename, const char mode, const Aboarray a
 				}
 			}
 
-			res = fwrite(&aboarray.size, sizeof(int), 1, file);
+			res = fwrite(&aboarray.size, sizeof(size_t), 1, file);
 
 			if (res != 1) {
 				fprintf(stderr, "Can`t write number of aboarray elements\n");
@@ -370,14 +370,14 @@ ErrorCode output_abofile(const char* filename, const char mode, const Aboarray a
 				return ERR_IO;
 			}
 
-			for (int i = 0; i < aboarray.size; ++i) {
+			for (size_t i = 0; i < aboarray.size; ++i) {
 				Abonent abonent = (aboarray.array)[i];
 				
-				int name_len = strlen(abonent.name);
-				res = fwrite(&name_len, sizeof(int), 1, file);
+				size_t name_len = strlen(abonent.name);
+				res = fwrite(&name_len, sizeof(size_t), 1, file);
 
 				if (res != 1) {
-					fprintf(stderr, "Can`t write name len of abonent %d\n", i + 1);
+					fprintf(stderr, "Can`t write name len of abonent %ld\n", i + 1);
 					fclose(file);
 					return ERR_IO;
 				}
@@ -385,16 +385,16 @@ ErrorCode output_abofile(const char* filename, const char mode, const Aboarray a
 				res = fwrite(abonent.name, sizeof(char), name_len, file);
 
 				if (res != name_len) {
-					fprintf(stderr, "Can`t write name of abonent %d\n", i + 1);
+					fprintf(stderr, "Can`t write name of abonent %ld\n", i + 1);
 					fclose(file);
 					return ERR_IO;
 				}
 
-				int phone_len = strlen(abonent.phone);
-				res = fwrite(&phone_len, sizeof(int), 1, file);
+				size_t phone_len = strlen(abonent.phone);
+				res = fwrite(&phone_len, sizeof(size_t), 1, file);
 
 				if (res != 1) {
-					fprintf(stderr, "Can`t write phone len of abonent %d\n", i + 1);
+					fprintf(stderr, "Can`t write phone len of abonent %ld\n", i + 1);
 					fclose(file);
 					return ERR_IO;
 				}
@@ -402,7 +402,7 @@ ErrorCode output_abofile(const char* filename, const char mode, const Aboarray a
 				res = fwrite(abonent.phone, sizeof(char), phone_len, file);
 
 				if (res != phone_len) {
-					fprintf(stderr, "Can`t write phone of abonent %d\n", i + 1);
+					fprintf(stderr, "Can`t write phone of abonent %ld\n", i + 1);
 					fclose(file);
 					return ERR_IO;
 				}
@@ -410,7 +410,7 @@ ErrorCode output_abofile(const char* filename, const char mode, const Aboarray a
 				res = fwrite(&(abonent.call_time), sizeof(time_t), 1, file);
 
 				if (res != 1) {
-					fprintf(stderr, "Can`t write call time of abonent %d\n", i + 1);
+					fprintf(stderr, "Can`t write call time of abonent %ld\n", i + 1);
 					fclose(file);
 					return ERR_IO;
 				}

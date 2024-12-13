@@ -28,13 +28,13 @@ int main(int argc, char **argv) {
 				output_mode = optarg;
 				break;
 			case '?':
-				if (index(OPTS, optopt) != NULL) {
+				/* if (index(OPTS, optopt) != NULL) {
 					fprintf(stderr, "Option -%c requires an argument\n", optopt);
 				} else if (isprint(optopt)) {
 					fprintf(stderr, "Unknown option `-%c`\n", optopt);
 				} else {
 					fprintf(stderr, "Unknown option character `\\x%x`\n", optopt);
-				}
+				} */
 				return 1;
 			default:
 				abort();
@@ -55,6 +55,11 @@ int main(int argc, char **argv) {
 		input_mode = TXT_MODE_STRING;
 	} else if (strcmp(BIN_MODE_STRING, input_mode) == 0) {
 		i_mode = BIN_MODE;
+
+		if (input_filename == NULL) {
+			fprintf(stderr, "Can`t read binary from console\n");
+			return 1;
+		}
 	} else {
 		fprintf(stderr, "Unknown file mode: %s\n", input_mode);
 		return 1;
@@ -66,6 +71,11 @@ int main(int argc, char **argv) {
 		output_mode = TXT_MODE_STRING;
 	} else if (strcmp(BIN_MODE_STRING, output_mode) == 0) {
 		o_mode = BIN_MODE;
+
+		if (output_filename == NULL) {
+			fprintf(stderr, "Can`t write binary to console\n");
+			return 1;
+		}
 	} else {
 		fprintf(stderr, "Unknown file mode: %s\n", output_mode);
 		return 1;
