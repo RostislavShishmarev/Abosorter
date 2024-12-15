@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/random.h>
 
 #include "abonent.h"
 #include "../const/const.h"
@@ -41,6 +42,49 @@ int check_phone(char* phone) {
 
 void print_abonent(FILE* file, Abonent abonent) {
 	fprintf(file, "%s;%s;%ld\n", abonent.name, abonent.phone, abonent.call_time);
+}
+
+ErrorCode generate_abonent(Abonent* abonent) {
+	// Generate name
+	
+	int name_len = rand() % MAX_NAME_LEN + 1;
+
+	(*abonent).name = malloc((name_len + 1) * sizeof(char));
+
+	if ((*abonent).name == NULL) {
+		return ERR_MEM;
+	}
+
+	ssize_t res_size = getrandom((*abonent).name, name_len, GRND_NONBLOCK);
+
+	if (res_size < name_len) {
+		free((*abonent).name);
+		return ERR_IO;
+	}
+
+	(*abonent).name[name_len] = CHAR_END;
+
+	// Generate phone
+	
+	int start_index = 0;
+	int add_plus = rand() % 2;
+
+	if (add_plus == 1) {
+		(*abonent).phone[0] = '+';
+		start_index = 1;
+	}
+
+	for (int i = start_index; i < PHONE_LEN; i++) {
+		(*abonent).phone[i] = DIGITS[rand() % 10];
+	}
+
+	(*abonent).phone[PHONE_LEN] = CHAR_END;
+
+	// Generate call time
+
+	(*abonent).call_time = (time_t)rand();
+
+	return ERR_OK;
 }
 
 void print_aboarray(FILE* file, Aboarray aboarray) {

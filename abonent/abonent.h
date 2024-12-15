@@ -20,6 +20,7 @@ Abonent init_abonent(char*, char[PHONE_LEN + 1], time_t);
 void clear_abonent(Abonent);
 int check_phone(char*);
 void print_abonent(FILE*, Abonent);
+ErrorCode generate_abonent(Abonent*);
 void print_aboarray(FILE*, Aboarray);
 void free_aboarray(Aboarray);
 

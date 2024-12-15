@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
 		fprintf(stderr, "Number of steps (arg -n) must be integer > 0\n");
 		return 1;
 	}
-	if (n_arrays_in_step) {
+	if (n_arrays_in_step <= 0) {
 		fprintf(stderr, "Number of generating arrays in each step (arg -e) must be integer > 0\n");
 		return 1;
 	}
@@ -111,6 +111,10 @@ int main(int argc, char **argv) {
 	printf("Steps number: %d; Step size: %d; Number of arrays in step: %d\n\n", n_steps, step_size, n_arrays_in_step);
 
 
+	// Generate and count
+
+	srand(time(NULL));
+
 	int current_array_len = step_size;
 
 	for (int i1 = 0; i1 < n_steps; i1++) {
@@ -138,6 +142,8 @@ int main(int argc, char **argv) {
 				}
 				(aboarray.array)[j] = abonent;
 				aboarray.size += 1;
+
+				// print_abonent(stdout, abonent);
 			}
 	
 			// Sort

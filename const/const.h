@@ -37,6 +37,8 @@
 #define N_STEPS 100
 #define N_ARRAYS_IN_STEPS 10
 
+#define MAX_NAME_LEN 30
+
 typedef enum {
 	ERR_OK = 0,
 	ERR_MEM = 1,
