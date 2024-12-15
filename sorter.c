@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
 	
 	// Get opts
 
-	while ((command = getopt(argc, argv, OPTS)) != -1) {
+	while ((command = getopt(argc, argv, SORTER_OPTS)) != -1) {
 		switch (command) {
 			case 'i':
 				input_mode = optarg;
@@ -56,13 +56,6 @@ int main(int argc, char **argv) {
 				field = optarg;
 				break;
 			case '?':
-				/* if (index(OPTS, optopt) != NULL) {
-					fprintf(stderr, "Option -%c requires an argument\n", optopt);
-				} else if (isprint(optopt)) {
-					fprintf(stderr, "Unknown option `-%c`\n", optopt);
-				} else {
-					fprintf(stderr, "Unknown option character `\\x%x`\n", optopt);
-				} */
 				return 1;
 			default:
 				abort();
@@ -128,8 +121,6 @@ int main(int argc, char **argv) {
 	} else {
 		sort_mode = NORMAL_MODE;
 	}
-
-	// Messages
 
 	if (strcmp(QUICK_TYPE, sort_type) == 0) {
 		sort_func = qsort_r;

@@ -1,7 +1,8 @@
 #ifndef CONST_H
 #define CONST_H
 
-#define OPTS "i:o:rna:f:"
+#define SORTER_OPTS "i:o:rna:f:"
+#define TIMER_OPTS "s:n:e:ra:f:"
 #define BIN_MODE_STRING "bin"
 #define TXT_MODE_STRING "txt"
 #define NOFILE_STRING "-"
@@ -31,6 +32,10 @@
 
 #define REVERSE_MODE 'r'
 #define NORMAL_MODE 'n'
+
+#define STEP_SIZE 100
+#define N_STEPS 100
+#define N_ARRAYS_IN_STEPS 10
 
 typedef enum {
 	ERR_OK = 0,
