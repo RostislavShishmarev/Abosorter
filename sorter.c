@@ -111,7 +111,7 @@ int main(int argc, char **argv) {
 	} else if (strcmp(CALL_TIME_FIELD, field) == 0) {
 		compare_func = compare_call_time;
 	} else {
-		fprintf(stderr, "Unknown sort field: %s\n", sort_type);
+		fprintf(stderr, "Unknown sort field: %s\n", field);
 		return 1;
 	}
 
