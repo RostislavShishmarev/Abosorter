@@ -1,7 +1,7 @@
 #ifndef CONST_H
 #define CONST_H
 
-#define OPTS "i:o:rnt:f:"
+#define OPTS "i:o:rna:f:"
 #define BIN_MODE_STRING "bin"
 #define TXT_MODE_STRING "txt"
 #define NOFILE_STRING "-"

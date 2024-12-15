@@ -8,6 +8,10 @@ void swap(void* first, void* second, void* buf, size_t size) {
 }
 
 void gnome_sort(void *base, size_t nmemb, size_t size, int (*compar)(const void *, const void *, void *), void *arg) {
+	if (nmemb < 2) {
+		return;
+	}
+	
 	size_t i = 0;
 	size_t last_i = nmemb - 1;
 
@@ -37,6 +41,10 @@ void gnome_sort(void *base, size_t nmemb, size_t size, int (*compar)(const void 
 }
 
 void dselect_sort(void *base, size_t nmemb, size_t size, int (*compar)(const void *, const void *, void *), void *arg) {
+	if (nmemb < 2) {
+		return;
+	}
+	
 	size_t first_i = 0;
 	size_t last_i = nmemb - 1;
 	size_t min_i = first_i;

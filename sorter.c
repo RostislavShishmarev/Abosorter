@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
 			case 'n':
 				do_sort = 0;
 				break;
-			case 't':
+			case 'a':
 				sort_type = optarg;
 				break;
 			case 'f':
