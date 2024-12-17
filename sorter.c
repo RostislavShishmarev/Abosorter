@@ -135,7 +135,7 @@ int main(int argc, char **argv) {
 
 	// Messages
 
-	printf("Input mode: %s\nOutput mode: %s\n\n", input_mode, output_mode);
+	printf("Input mode: %s\nOutput mode: %s\n", input_mode, output_mode);
 
 	char* input_s = input_filename == NULL ? "console" : input_filename;
 	char* output_s = output_filename == NULL ? "console" : output_filename;

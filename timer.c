@@ -28,7 +28,9 @@ int main(int argc, char **argv) {
 
 	int (*compare_func)(const void *, const void *, void *);
 	void (*sort_func)(void*, size_t, size_t, int (*)(const void *, const void *, void *), void*);
-	
+
+	int print_generated_data = 0;
+
 	// Get opts
 
 	while ((command = getopt(argc, argv, TIMER_OPTS)) != -1) {
@@ -50,6 +52,9 @@ int main(int argc, char **argv) {
 				break;
 			case 'f':
 				field = optarg;
+				break;
+			case 'p':
+				print_generated_data = 1;
 				break;
 			case '?':
 				return 1;
@@ -115,12 +120,9 @@ int main(int argc, char **argv) {
 
 	srand(time(NULL));
 
-	clock();
-
 	int current_array_len = step_size;
 
 	for (int i1 = 0; i1 < n_steps; i1++) {
-		
 		double full_time = 0;
 
 		for (int i2 = 0; i2 < n_arrays_in_step; i2++) {
@@ -138,14 +140,16 @@ int main(int argc, char **argv) {
 				Abonent abonent = {};
 				ErrorCode res = generate_abonent(&abonent);
 				if (res != ERR_OK) {
-					fprintf(stderr, "Error during generating rando data\n");
+					fprintf(stderr, "Error during generating random data\n");
 					free_aboarray(aboarray);
 					return 1;
 				}
 				(aboarray.array)[j] = abonent;
 				aboarray.size += 1;
-
-				// print_abonent(stdout, abonent);
+				
+				if (print_generated_data == 1) {	
+					print_abonent(stdout, abonent);
+				}
 			}
 	
 			// Sort
@@ -161,7 +165,7 @@ int main(int argc, char **argv) {
 			free_aboarray(aboarray);
 		}
 
-		printf("%d %lf\n", current_array_len, full_time / n_arrays_in_step);
+		printf("%d\t%lf\n", current_array_len, full_time / n_arrays_in_step);
 
 		current_array_len += step_size;
 	}

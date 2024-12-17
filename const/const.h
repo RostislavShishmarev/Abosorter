@@ -2,7 +2,7 @@
 #define CONST_H
 
 #define SORTER_OPTS "i:o:rna:f:"
-#define TIMER_OPTS "s:n:e:ra:f:"
+#define TIMER_OPTS "s:n:e:ra:f:p"
 #define BIN_MODE_STRING "bin"
 #define TXT_MODE_STRING "txt"
 #define NOFILE_STRING "-"
@@ -18,7 +18,7 @@
 
 #define PHONE_LEN 16
 
-#define ERRMEM_MSG "Memory error, abort program"
+#define ERRMEM_MSG "\n\nMemory error, abort program\n\n"
 
 #define DIGITS "0123456789"
 

@@ -79,6 +79,7 @@ void dselect_sort(void *base, size_t nmemb, size_t size, int (*compar)(const voi
 				max_el = j_el;
 			}
 		}
+		
 		if (first_el == max_el) {
 			max_el = min_el;
 		}
@@ -87,6 +88,8 @@ void dselect_sort(void *base, size_t nmemb, size_t size, int (*compar)(const voi
 
 		first_i += 1;
 		last_i -= 1;
+		min_i = first_i;
+		max_i = last_i;
 	}
 
 	free(buf);
